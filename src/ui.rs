@@ -3,8 +3,6 @@ use gtk::glib;
 
 #[path="./log.rs"]
 mod log;
-#[path="./req.rs"]
-mod req;
 
 pub fn build_ui(application: &gtk::Application) {
     let window = gtk::ApplicationWindow::new(application);

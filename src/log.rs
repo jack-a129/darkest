@@ -1,5 +1,6 @@
 use gtk::prelude::*;
 use std::{fs,fs::File,io,io::Write};
+use chrono::Utc;
 
 fn textadd(text :&String) -> Result<bool,io::Error>{
     let log = fs::read_to_string("log.conf")?;
@@ -23,12 +24,18 @@ fn error(){
     });
 }
 
+fn timeparse(time :&String) -> String{
+    let vec :Vec<&str> = time.split("!_!").collect();
+    format!("{}/{}/{} {}:{}",vec[0],vec[1],vec[2],vec[3],vec[4])
+}
+
 pub fn add(list :&gtk::ListBox,input :&gtk::Entry){
     let val = input.text().to_string();
+    let time = Utc::now().format("%Y!_!%m!_!%d!_!%H!_!%M").to_string();
     if let Ok(_) = textadd(&val){
         let logbox = gtk::Label::builder()
             .use_markup(true)
-            .label(format!("<big>{}</big>",val))
+            .label(format!("<big>{}: {}</big>",timeparse(&time),val))
             .build();
         list.append(&logbox);
         input.set_text("");
