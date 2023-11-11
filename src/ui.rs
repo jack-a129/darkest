@@ -35,25 +35,19 @@ pub fn build_ui(application: &gtk::Application) {
     let input = gtk::Entry::builder()
         .placeholder_text("Logを入力")
         .build();
-    let pushbtn = gtk::Button::builder()
-        .label("プッシュする")
-        .sensitive(false)
-        .build();
-    pushbtn.connect_clicked(glib::clone!(@weak list => move|_|{
-        log::alldel(&list);
-        //req::upload();
-    }));
     let addbtn = gtk::Button::builder()
         .label("追加する")
         .build();
-    addbtn.connect_clicked(glib::clone!(@weak list,@weak input,@weak pushbtn => move |_|{
-        log::add(&list,&input,&pushbtn);
+    addbtn.connect_clicked(glib::clone!(@weak list,@weak input=> move |_|{
+        log::add(&list,&input);
     }));
 
+    if let Ok(n) = log::check_conf(){
+        log::init(n,&list);
+    }
         
     ctrlbox.append(&input);
     ctrlbox.append(&addbtn);
-    ctrlbox.append(&pushbtn);
 
     mainbox.append(&navbar);
     mainbox.append(&ctrlbox);
